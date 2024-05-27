@@ -1,0 +1,15 @@
+name: Schedule Google Cloud Function Request Every Minute
+
+on:
+  schedule:
+    # Cron形式でスケジュールを設定（毎分実行）
+    - cron: '*/1 * * * *'
+
+jobs:
+  send_request:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Send request to Google Cloud Function
+      run: |
+        curl -X POST https://asia-northeast1-jooto-347110.cloudfunctions.net/gas-push-github-test
