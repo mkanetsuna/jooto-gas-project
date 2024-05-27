@@ -3,7 +3,7 @@ name: Schedule Google Cloud Function Request Every Minute
 on:
   schedule:
     # Cron形式でスケジュールを設定（毎分実行）
-    - cron: '*/1 * * * *'
+    - cron: '* 1 * * *'
 
 jobs:
   send_request:
