@@ -8,8 +8,10 @@ on:
 jobs:
   send_request:
     runs-on: ubuntu-latest
-
+    
     steps:
     - name: Send request to Google Cloud Function
       run: |
-        curl -X POST https://asia-northeast1-jooto-347110.cloudfunctions.net/gas-push-github-test
+        curl -G \
+        --url "https://asia-northeast1-jooto-347110.cloudfunctions.net/gas-push-github-test" \
+        --data-urlencode "script_id=16Hv6sIdm-WcmP7iYgSVzG1X17sZsyGpyhs5cG5sR-FdAnGIw3TRM2HsM"
