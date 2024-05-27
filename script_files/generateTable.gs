@@ -1,7 +1,7 @@
 //test
 function createDatabase(sheetId='1B7-cfnlTA-QevFfNP5pwf7KeOdfB3HWAA12SMe_ym-8') {
   const sheet = SpreadsheetApp.openById(sheetId);
-//sdfghjk
+//saaaa
   // Emailシートの存在チェックと作成
   const emailSheet = sheet.getSheetByName('Email');
   const emailHeaders = ['id', 'subject', 'body', 'sender', 'to', 'cc', 'bcc', 'reply_to', 'date', 'thread_id', 'is_Jooto_import'];
