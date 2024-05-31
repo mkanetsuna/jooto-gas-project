@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Spreadsheet Embed</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #e6ecf0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+        .sidebar {
+            width: 200px;
+            background-color: #1da1f2;
+            color: white;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .header {
+            background-color: #1da1f2;
+            color: white;
+            text-align: center;
+            width: 100%;
+            padding: 20px 0;
+        }
+        .spreadsheet-container {
+            padding: 20px;
+            position: relative;
+        }
+        iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+            border-radius: 10px;
+        }
+        .footer {
+            background-color: #f5f8fa;
+            color: #657786;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 14px;
+            width: 100%;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+        }
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        .fixed-header {
+            position: sticky;
+            top: 0;
+            background-color: white;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body onload="resizeDialog()">
+    <div class="sidebar">
+        <h2>シートを選択</h2>
+        <ul id="sheet-list">
+            <!-- シートリストがここに動的に追加されます -->
+        </ul>
+    </div>
+    <div class="content">
+        <div class="header">
+            <h1>Google Spreadsheet Viewer</h1>
+        </div>
+        <div class="spreadsheet-container">
+            <iframe id="spreadsheet-iframe" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vS_ooPAWeK_b5Nt6knTicuE28wAeWtYuyEVF8F3-5o0ib_Y2JlPg4nr2rVTBiv6QGgHPNvFPPvEEwQy/pubhtml?widget=true&amp;headers=false"></iframe>
+        </div>
+        <div class="footer">
+            <p>Embedded by AutoGPT-4o</p>
+        </div>
+    </div>
+    <div class="popup-overlay" id="popup-overlay"></div>
+    <div class="popup" id="popup">
+        <p id="popup-content"></p>
+        <button onclick="closePopup()">閉じる</button>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Document loaded and ready.');
+
+            // シートリストの設定
+            const sheets = ['シート3', 'Operations', 'cleaners', 'shifts', 'checkin', 'placements', 'photo_tours'];
+            const sheetList = document.getElementById('sheet-list');
+            sheets.forEach(sheet => {
+                const li = document.createElement('li');
+                li.textContent = sheet;
+                li.onclick = () => loadSheet(sheet);
+                sheetList.appendChild(li);
+            });
+
+            // セルクリックイベントの設定
+            const iframe = document.getElementById('spreadsheet-iframe');
+            iframe.addEventListener('load', () => {
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                iframeDoc.addEventListener('click', (event) => {
+                    const cell = event.target.closest('td');
+                    if (cell) {
+                        showPopup(cell.textContent);
+                    }
+                });
+            });
+
+            // 初期シートの読み込み
+            loadSheet(sheets[0]);
+        });
+
+        function resizeDialog() {
+          const width = window.innerWidth * 1;
+          const height = window.innerHeight * 1;
+          google.script.host.setWidth(width);
+          google.script.host.setHeight(height);
+        }
+        window.onresize = resizeDialog;
+
+
+        // シートの読み込み
+        function loadSheet(sheetName) {
+            const iframe = document.getElementById('spreadsheet-iframe');
+            const baseUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS_ooPAWeK_b5Nt6knTicuE28wAeWtYuyEVF8F3-5o0ib_Y2JlPg4nr2rVTBiv6QGgHPNvFPPvEEwQy/pubhtml";
+            iframe.src = `${baseUrl}?widget=true&headers=false&gid=${getSheetId(sheetName)}`;
+        }
+
+        // シート名からシートIDを取得する関数
+        function getSheetId(sheetName) {
+            const sheetIds = {
+                'シート3': '1085289536',
+                'Operations': '0',
+                'cleaners': '717474883',
+                'shifts': '1861079952',
+                'checkin': '102299638',
+                'placements': '1069591351',
+                'photo_tours': '1672413332'
+            };
+            return sheetIds[sheetName];
+        }
+
+        // ポップアップを表示する関数
+        function showPopup(content) {
+            const popup = document.getElementById('popup');
+            const overlay = document.getElementById('popup-overlay');
+            document.getElementById('popup-content').textContent = content;
+            popup.style.display = 'block';
+            overlay.style.display = 'block';
+        }
+
+        // ポップアップを閉じる関数
+        function closePopup() {
+            const popup = document.getElementById('popup');
+            const overlay = document.getElementById('popup-overlay');
+            popup.style.display = 'none';
+            overlay.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
