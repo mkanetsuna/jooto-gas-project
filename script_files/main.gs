@@ -37,19 +37,19 @@ function main() {
   Utilities.sleep(3000); // 3秒待機
   //GetUsersAPIResponse(accessToken);
   //Utilities.sleep(3000); // 3秒待機
-  ImportDelegateCleaningsAPIResponse(accessToken, sheetId, startDate, endDate)
+  //ImportDelegateCleaningsAPIResponse(accessToken, sheetId, startDate, endDate)
   Utilities.sleep(3000); // 3秒待機
-  ImportCleaningsAPIResponse(accessToken, sheetId, startDate, endDate);
+  //ImportCleaningsAPIResponse(accessToken, sheetId, startDate, endDate);
   Utilities.sleep(3000); // 3秒待機
   ImportOperationsAPIResponse(accessToken, sheetId, totalPages, pageSize, startDate, endDate, filter);
-  Utilities.sleep(3000); // 3秒待機
+  /*Utilities.sleep(3000); // 3秒待機
   ImportPlacementsAPIResponse(accessToken, sheetId);
   Utilities.sleep(3000); // 3秒待機
   ImportCheckinAPIResponse(accessToken, sheetId);
   Utilities.sleep(3000); // 3秒待機
 
   ImportStatusAPIResponse(accessToken, sheetId);
-  //Utilities.sleep(3000); // 3秒待機
+  //Utilities.sleep(3000); // 3秒待機*/
 }
 
 
@@ -79,12 +79,16 @@ function GetUsersAPIResponse(accessToken) {
 function ImportOperationsAPIResponse(accessToken, sheetId, totalPages, pageSize, startDate, endDate, filter) {
   const operationsApiUrl = "https://api-cleaning.m2msystems.cloud/v4/operations/search";
 
+  const keysToConvert = ['startedAt', 'finishedAt', 'reportedAt', 'updatedAt'];
+
   for (let currentPage = 1; currentPage <= totalPages; currentPage++) {
     const isCurrentPage1 = (currentPage === 1);
     const payloadForOperations = CreatePayload({startDate}, {endDate}, {filter}, {page:currentPage}, {pageSize});
-    const jsonData = CallApi(accessToken, operationsApiUrl, "POST", payloadForOperations);
+    let operationsJsonData = CallApi(accessToken, operationsApiUrl, "POST", payloadForOperations);
 
-    OutputJsonToSheet(jsonData, sheetId, "operations", isCurrentPage1);
+    operationsJsonData = ConvertUnixToUTC(operationsJsonData, keysToConvert);
+
+    OutputJsonToSheet(operationsJsonData, sheetId, "operations", isCurrentPage1);
   }
 }
 
