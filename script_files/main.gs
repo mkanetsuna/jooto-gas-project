@@ -59,7 +59,7 @@ function main() {
 function GetOperationsAPICount(accessToken, payloadForCount) {
   const countApiUrl = "https://api-cleaning.m2msystems.cloud/v4/operations/count";
   const apiResponse = CallApi(accessToken, countApiUrl, "POST", payloadForCount);
-  return apiResponse.count;
+  return apiResponse;
 }
 
 
