@@ -89,7 +89,7 @@ function ImportOperationsAPIResponse(accessToken, sheetId, totalPages, pageSize,
     let operationsJsonData = CallApi(accessToken, operationsApiUrl, "POST", payloadForOperations);
 
     Logger.log(operationsJsonData);
-    operationsJsonData = ConvertUnixToUTC(operationsJsonData, keysToConvert);
+    operationsJsonData = FormatUnixToFormattedDateTime(operationsJsonData, keysToConvert);
     Logger.log(operationsJsonData);
 
     OutputJsonToSheet(operationsJsonData, sheetId, "operations", isCurrentPage1);
