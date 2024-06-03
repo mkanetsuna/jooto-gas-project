@@ -36,11 +36,11 @@ function main() {
   const totalPages = Math.ceil(fullSizeCount / pageSize);
   Logger.log(totalPages)
   
-  Utilities.sleep(3000); // 3秒待機
+  Utilities.sleep(5000); // 5秒待機
   //GetUsersAPIResponse(accessToken);
   //Utilities.sleep(3000); // 3秒待機
-  //ImportDelegateCleaningsAPIResponse(accessToken, sheetId, startDate, endDate)
-  Utilities.sleep(3000); // 3秒待機
+  ImportDelegateCleaningsAPIResponse(accessToken, sheetId, startDate, endDate)
+  Utilities.sleep(5000); // 5秒待機
   ImportCleaningsAPIResponse(accessToken, sheetId, startDate, endDate);
   Utilities.sleep(3000); // 3秒待機
   //ImportOperationsAPIResponse(accessToken, sheetId, totalPages, pageSize, startDate, endDate, filter);
@@ -73,24 +73,6 @@ function GetUsersAPIResponse(accessToken) {
   } catch (error) {
     Logger.log('Error in GetUsersAPIResponse: ' + error.toString());
     throw error;
-  }
-}
-
-
-
-function ImportOperationsAPIResponse(accessToken, sheetId, totalPages, pageSize, startDate, endDate, filter) {
-  const operationsApiUrl = "https://api-cleaning.m2msystems.cloud/v4/operations/search";
-
-  const keysToConvert = ['createdAt', 'startedAt', 'finishedAt', 'reportedAt', 'updatedAt', 'assignedAt'];
-
-  for (let currentPage = 1; currentPage <= totalPages; currentPage++) {
-    const isCurrentPage1 = (currentPage === 1);
-    const payloadForOperations = CreatePayload({startDate}, {endDate}, {filter}, {page:currentPage}, {pageSize});
-    let operationsJsonData = CallApi(accessToken, operationsApiUrl, "POST", payloadForOperations);
-
-    operationsJsonData = FormatUnixToFormattedDateTime(operationsJsonData, keysToConvert);
-
-    OutputJsonToSheet(operationsJsonData, sheetId, "operations", isCurrentPage1);
   }
 }
 
