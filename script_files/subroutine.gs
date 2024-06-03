@@ -67,22 +67,30 @@ function FlattenObject(obj, parent = '', res = {}) {
 
 
 
-function OutputJsonToSheet(jsonData, sheetId, sheetName, isCurrentPage1=true) {
+function OutputJsonToSheet(jsonData, sheetId, sheetName, isCurrentPage1 = true) {
   const spreadsheet = SpreadsheetApp.openById(sheetId);
   const sheet = spreadsheet.getSheetByName(sheetName);
-  if (!sheet)
-    throw new Error('Sheet with name ' + sheetName + ' does not exist in the spreadsheet.');
+  if (!sheet) throw new Error('Sheet with name ' + sheetName + ' does not exist in the spreadsheet.');
+
   const keys = Object.keys(jsonData[0]);
   const startRow = (isCurrentPage1) ? 1 : sheet.getLastRow() + 1;
+
   if (isCurrentPage1) {
     sheet.clear();
     for (let i = 0; i < keys.length; i++)
       sheet.getRange(1, i + 1).setValue(keys[i]);
   }
-  for (let row = 0; row < jsonData.length; row++)
-    for (let col = 0; col < keys.length; col++)
-      sheet.getRange(startRow + row + 1, col + 1).setValue(jsonData[row][keys[col]]);
+
+  for (let row = 0; row < jsonData.length; row++) {
+    for (let col = 0; col < keys.length; col++) {
+      let value = jsonData[row][keys[col]];
+      if (Array.isArray(value))
+        value = value.join(', '); // リストをカンマ区切りの文字列に変換
+      sheet.getRange(startRow + row + 1, col + 1).setValue(value);
+    }
+  }
 }
+
 
 
 
