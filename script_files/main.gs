@@ -41,9 +41,9 @@ function main() {
   //Utilities.sleep(3000); // 3秒待機
   //ImportDelegateCleaningsAPIResponse(accessToken, sheetId, startDate, endDate)
   Utilities.sleep(3000); // 3秒待機
-  //ImportCleaningsAPIResponse(accessToken, sheetId, startDate, endDate);
+  ImportCleaningsAPIResponse(accessToken, sheetId, startDate, endDate);
   Utilities.sleep(3000); // 3秒待機
-  ImportOperationsAPIResponse(accessToken, sheetId, totalPages, pageSize, startDate, endDate, filter);
+  //ImportOperationsAPIResponse(accessToken, sheetId, totalPages, pageSize, startDate, endDate, filter);
   /*Utilities.sleep(3000); // 3秒待機
   ImportPlacementsAPIResponse(accessToken, sheetId);
   Utilities.sleep(3000); // 3秒待機
