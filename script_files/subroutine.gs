@@ -97,8 +97,15 @@ function CallApi(accessToken, apiUrl, method, payload=null, authHeader='Bearer '
   };
   if (payload)
     options.payload = JSON.stringify(payload);
-  const response = UrlFetchApp.fetch(apiUrl, options);
-  return JSON.parse(response.getContentText());
+  try {
+    const response = UrlFetchApp.fetch(apiUrl, options);
+    Logger.log('Response code: ' + response.getResponseCode());
+    Logger.log('Response body: ' + response.getContentText());
+    return JSON.parse(response.getContentText());
+  } catch (error) {
+    Logger.log('Error in CallApi: ' + error.toString());
+    throw error;
+  }
 }
 
 
