@@ -81,16 +81,14 @@ function GetUsersAPIResponse(accessToken) {
 function ImportOperationsAPIResponse(accessToken, sheetId, totalPages, pageSize, startDate, endDate, filter) {
   const operationsApiUrl = "https://api-cleaning.m2msystems.cloud/v4/operations/search";
 
-  const keysToConvert = ['startedAt', 'finishedAt', 'reportedAt', 'updatedAt'];
+  const keysToConvert = ['createdAt', 'startedAt', 'finishedAt', 'reportedAt', 'updatedAt'];
 
   for (let currentPage = 1; currentPage <= totalPages; currentPage++) {
     const isCurrentPage1 = (currentPage === 1);
     const payloadForOperations = CreatePayload({startDate}, {endDate}, {filter}, {page:currentPage}, {pageSize});
     let operationsJsonData = CallApi(accessToken, operationsApiUrl, "POST", payloadForOperations);
 
-    Logger.log(operationsJsonData);
     operationsJsonData = FormatUnixToFormattedDateTime(operationsJsonData, keysToConvert);
-    Logger.log(operationsJsonData);
 
     OutputJsonToSheet(operationsJsonData, sheetId, "operations", isCurrentPage1);
   }
