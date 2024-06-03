@@ -86,27 +86,46 @@ function OutputJsonToSheet(jsonData, sheetId, sheetName, isCurrentPage1=true) {
 
 
 
-function CallApi(accessToken, apiUrl, method, payload=null, authHeader='Bearer ') {
+function CallApi(accessToken, apiUrl, method, payload = null, authHeader = 'Bearer ', maxRetries = 3) {
   const headers = {
     'Authorization': authHeader + accessToken,
     'Content-Type': 'application/json'
   };
   const options = {
     'method': method,
-    'headers': headers
+    'headers': headers,
+    'muteHttpExceptions': true
   };
-  if (payload)
-    options.payload = JSON.stringify(payload);
-  try {
-    const response = UrlFetchApp.fetch(apiUrl, options);
-    Logger.log('Response code: ' + response.getResponseCode());
-    Logger.log('Response body: ' + response.getContentText());
-    return JSON.parse(response.getContentText());
-  } catch (error) {
-    Logger.log('Error in CallApi: ' + error.toString());
-    throw error;
+  if (payload) options.payload = JSON.stringify(payload);
+
+  let attempts = 0;
+  const retryDelay = 1000; // 初期リトライ待機時間（ミリ秒）
+
+  while (attempts < maxRetries) {
+    try {
+      const response = UrlFetchApp.fetch(apiUrl, options);
+      const responseCode = response.getResponseCode();
+      
+      if (responseCode == 503) {
+        throw new Error('503 Service Unavailable');
+      }
+      
+      Logger.log('Response code: ' + responseCode);
+      Logger.log('Response body: ' + response.getContentText());
+      return JSON.parse(response.getContentText());
+    } catch (error) {
+      attempts++;
+      if (attempts < maxRetries) {
+        Logger.log('Error: ' + error.message + '. Retrying in ' + retryDelay * attempts + ' ms...');
+        Utilities.sleep(retryDelay * attempts); // 指数バックオフ
+      } else {
+        Logger.log('Max retries reached. Error: ' + error.message);
+        throw error;
+      }
+    }
   }
 }
+
 
 
 
