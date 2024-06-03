@@ -10,13 +10,33 @@
  * 8. GetColumnDataByHeader(searchString, sheetId, sheetName)
  */
 
+function ImportOperationsAPIResponse(accessToken, sheetId, totalPages, pageSize, startDate, endDate, filter) {
+  const operationsApiUrl = "https://api-cleaning.m2msystems.cloud/v4/operations/search";
+
+  const keysToConvert = ['createdAt', 'startedAt', 'finishedAt', 'reportedAt', 'updatedAt', 'assignedAt'];
+
+  for (let currentPage = 1; currentPage <= totalPages; currentPage++) {
+    const isCurrentPage1 = (currentPage === 1);
+    const payloadForOperations = CreatePayload({startDate}, {endDate}, {filter}, {page:currentPage}, {pageSize});
+    let operationsJsonData = CallApi(accessToken, operationsApiUrl, "POST", payloadForOperations);
+
+    operationsJsonData = FormatUnixToFormattedDateTime(operationsJsonData, keysToConvert);
+
+    OutputJsonToSheet(operationsJsonData, sheetId, "operations", isCurrentPage1);
+  }
+}
+
 function ImportCleaningsAPIResponse(accessToken, sheetId, startDate, endDate) {
   const cleaningsApiUrl = "https://api-cleaning.m2msystems.cloud/v4/search/cleanings";
 
-  const payloadForCleanings = CreatePayload({startDate}, {endDate});
-  const jsonData = CallApi(accessToken, cleaningsApiUrl, "POST", payloadForCleanings);
+  const keysToConvert = ['createdAt', 'startedAt', 'finishedAt', 'reportedAt', 'updatedAt', 'assignedAt'];
 
-  OutputJsonToSheet(jsonData, sheetId, "cleanings");
+  const payloadForCleanings = CreatePayload({startDate}, {endDate});
+  let cleaningsJsonData = CallApi(accessToken, cleaningsApiUrl, "POST", payloadForCleanings);
+
+  cleaningsJsonData = FormatUnixToFormattedDateTime(cleaningsJsonData, keysToConvert);
+
+  OutputJsonToSheet(cleaningsJsonData, sheetId, "cleanings");
 }
 
 
@@ -24,10 +44,15 @@ function ImportCleaningsAPIResponse(accessToken, sheetId, startDate, endDate) {
 function ImportDelegateCleaningsAPIResponse(accessToken, sheetId, startDate, endDate) {
   const delegateCleaningsApiUrl = "https://api-cleaning.m2msystems.cloud/v3/search/delegate_cleanings";
 
-  const payloadFordelegateCleanings = CreatePayload({startDate}, {endDate});
-  const jsonData = CallApi(accessToken, delegateCleaningsApiUrl, "POST", payloadFordelegateCleanings);
+  const keysToConvert = ['createdAt', 'startedAt', 'finishedAt', 'reportedAt', 'updatedAt', 'assignedAt'];
 
-  OutputJsonToSheet(jsonData, sheetId, "delegate_cleanings");
+  const payloadFordelegateCleanings = CreatePayload({startDate}, {endDate});
+
+  let delegateCleaningsJsonData = CallApi(accessToken, delegateCleaningsApiUrl, "POST", payloadFordelegateCleanings);
+
+  delegateCleaningsJsonData = FormatUnixToFormattedDateTime(delegateCleaningsJsonData, keysToConvert);
+
+  OutputJsonToSheet(delegateCleaningsJsonData, sheetId, "delegate_cleanings");
 }
 
 
