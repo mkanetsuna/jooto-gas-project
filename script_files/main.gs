@@ -138,28 +138,6 @@ function ImportCheckinAPIResponse(accessToken, sheetId) {
 
 
 
-function ImportCleaningsAPIResponse(accessToken, sheetId, startDate, endDate) {
-  const cleaningsApiUrl = "https://api-cleaning.m2msystems.cloud/v4/search/cleanings";
-
-  const payloadForCleanings = CreatePayload({startDate}, {endDate});
-  const jsonData = CallApi(accessToken, cleaningsApiUrl, "POST", payloadForCleanings);
-
-  OutputJsonToSheet(jsonData, sheetId, "cleanings");
-}
-
-
-
-function ImportDelegateCleaningsAPIResponse(accessToken, sheetId, startDate, endDate) {
-  const delegateCleaningsApiUrl = "https://api-cleaning.m2msystems.cloud/v3/search/delegate_cleanings";
-
-  const payloadFordelegateCleanings = CreatePayload({startDate}, {endDate});
-  const jsonData = CallApi(accessToken, delegateCleaningsApiUrl, "POST", payloadFordelegateCleanings);
-
-  OutputJsonToSheet(jsonData, sheetId, "delegate_cleanings");
-}
-
-
-
 
 /*function ImportPhotoToursAPIResponse() {
   const accessToken = GetToken();
