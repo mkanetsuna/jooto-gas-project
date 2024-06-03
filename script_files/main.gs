@@ -61,10 +61,16 @@ function GetOperationsAPICount(accessToken, payloadForCount) {
 
 
 //だめ
-function GetUsersAPIResponse(accessToken="eyJhbGciOiJSUzI1NiIsImlzcyI6Im0ybS11c2VycyIsImtpZCI6InFmS0hkRHl4bkdNeTFjSWZpK1dUNnc9PSIsInR5cCI6IkpXVCJ9.eyJhdWQiOiIiLCJhdXRob3JpdHkiOiJNYW5hZ2VyIiwiY29tcGFueUlkIjoiMDAxMTJlZDItYjg1YS00YTgzLWE3YTMtZDY1NDc2N2YyNTYxIiwiZXhwIjoxNzE3NDgxNTU3LCJpc3MiOiJtMm0tdXNlcnMiLCJsb2dpblR5cGUiOiJOb3JtYWwiLCJzY29wZSI6eyJjbGVhbmluZ3MiOiJ3cml0ZSIsImxpc3RpbmdzIjoid3JpdGUiLCJtb250aGx5IjoiYWRtaW4ifSwidXNlcklkIjoiZDA1ZTM2OGYtNTc1NS00MWMzLTgxMjctNzVkMWRhZjAxMGJiIn0.VPbWswvEiWezoXz0YYWY5RomgHIxojm7RH8-FcBVYstp9O_6T-1iOoEa_-2x4KBMgAeJEF_UnmQNqe2k7yNvGR-mxZId0HU-YwcCMuXZrsZwCHXamD-BNs0jUjYThgt-kZPXKb0wtIMhtR7uwp9IYyECpqxmzrssAswpr5Xur5V34kvLUOamKQS0iiA-wpygr3ttB2IYyZ1fQDe0SvkXQkEuOOFuEOpU4Dwt5qwf8KDQN3bpP_zAO8S8UnAJApKG8MFRx0_zZytthcaa1ehbXYCWnsd19t_FSDfKwAvy4A1uE6GkyLRqwOTw9Ssgoail3F2EIrgFGdz6iYDB2RQL-w") {
+function GetUsersAPIResponse(accessToken) {
   const usersApiUrl = "https://api.m2msystems.cloud/users/find_by_company_id?statuses=Active";
-  const jsonData = CallApi(accessToken, usersApiUrl, "GET", authHeader="");
-  return jsonData;
+  try {
+    const jsonData = CallApi(accessToken, usersApiUrl, "GET", authHeader="");
+    Logger.log(jsonData);
+    return jsonData;
+  } catch (error) {
+    Logger.log('Error in GetUsersAPIResponse: ' + error.toString());
+    throw error;
+  }
 }
 
 
