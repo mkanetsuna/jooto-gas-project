@@ -86,7 +86,9 @@ function ImportOperationsAPIResponse(accessToken, sheetId, totalPages, pageSize,
     const payloadForOperations = CreatePayload({startDate}, {endDate}, {filter}, {page:currentPage}, {pageSize});
     let operationsJsonData = CallApi(accessToken, operationsApiUrl, "POST", payloadForOperations);
 
+    Logger.log(operationsJsonData);
     operationsJsonData = ConvertUnixToUTC(operationsJsonData, keysToConvert);
+    Logger.log(operationsJsonData);
 
     OutputJsonToSheet(operationsJsonData, sheetId, "operations", isCurrentPage1);
   }
