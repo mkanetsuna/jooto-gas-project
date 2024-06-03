@@ -81,7 +81,7 @@ function GetUsersAPIResponse(accessToken) {
 function ImportOperationsAPIResponse(accessToken, sheetId, totalPages, pageSize, startDate, endDate, filter) {
   const operationsApiUrl = "https://api-cleaning.m2msystems.cloud/v4/operations/search";
 
-  const keysToConvert = ['createdAt', 'startedAt', 'finishedAt', 'reportedAt', 'updatedAt'];
+  const keysToConvert = ['createdAt', 'startedAt', 'finishedAt', 'reportedAt', 'updatedAt', 'assignedAt'];
 
   for (let currentPage = 1; currentPage <= totalPages; currentPage++) {
     const isCurrentPage1 = (currentPage === 1);
