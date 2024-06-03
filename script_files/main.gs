@@ -30,7 +30,7 @@ function main() {
   const payloadForCount = CreatePayload({startDate}, {endDate},{filter});
 
   const operationsApiCount = GetOperationsAPICount(accessToken, payloadForCount);
-  const fullSizeCount = operationsApiCount["count"];
+  const fullSizeCount = operationsApiCount.count;
   Logger.log(fullSizeCount);
   const pageSize = 1000;
   const totalPages = Math.ceil(fullSizeCount / pageSize) + 1;
