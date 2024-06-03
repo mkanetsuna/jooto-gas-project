@@ -106,12 +106,10 @@ function CallApi(accessToken, apiUrl, method, payload = null, authHeader = 'Bear
       const response = UrlFetchApp.fetch(apiUrl, options);
       const responseCode = response.getResponseCode();
       
-      if (responseCode == 503) {
+      if (responseCode == 503)
         throw new Error('503 Service Unavailable');
-      }
       
       Logger.log('Response code: ' + responseCode);
-      Logger.log('Response body: ' + response.getContentText());
       return JSON.parse(response.getContentText());
     } catch (error) {
       attempts++;
