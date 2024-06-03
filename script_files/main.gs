@@ -31,6 +31,7 @@ function main() {
 
   const operationsApiCount = GetOperationsAPICount(accessToken, payloadForCount);
   const fullSizeCount = operationsApiCount.count;
+  Logger.log(fullSizeCount);
   const pageSize = 1000;
   const totalPages = Math.ceil(fullSizeCount / pageSize) + 1;
   Logger.log(totalPages)
