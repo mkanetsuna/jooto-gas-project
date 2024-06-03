@@ -33,7 +33,7 @@ function main() {
   const fullSizeCount = operationsApiCount.count;
   Logger.log(fullSizeCount);
   const pageSize = 1000;
-  const totalPages = Math.ceil(fullSizeCount / pageSize) + 1;
+  const totalPages = Math.ceil(fullSizeCount / pageSize);
   Logger.log(totalPages)
   
   Utilities.sleep(3000); // 3秒待機
