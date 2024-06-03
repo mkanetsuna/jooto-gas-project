@@ -35,19 +35,20 @@ function main() {
   const totalPages = Math.ceil(fullSizeCount / pageSize);
   
   Utilities.sleep(3000); // 3秒待機
-  GetUsersAPIResponse(accessToken);
+  //GetUsersAPIResponse(accessToken);
   //Utilities.sleep(3000); // 3秒待機
-  //ImportDelegateCleaningsAPIResponse(accessToken, sheetId, startDate, endDate)
-  //ImportCleaningsAPIResponse(accessToken, sheetId, startDate, endDate);
-  /*Utilities.sleep(3000); // 3秒待機
+  ImportDelegateCleaningsAPIResponse(accessToken, sheetId, startDate, endDate)
+  Utilities.sleep(3000); // 3秒待機
+  ImportCleaningsAPIResponse(accessToken, sheetId, startDate, endDate);
+  Utilities.sleep(3000); // 3秒待機
   ImportOperationsAPIResponse(accessToken, sheetId, totalPages, pageSize, startDate, endDate, filter);
   Utilities.sleep(3000); // 3秒待機
   ImportPlacementsAPIResponse(accessToken, sheetId);
   Utilities.sleep(3000); // 3秒待機
   ImportCheckinAPIResponse(accessToken, sheetId);
-  Utilities.sleep(3000); // 3秒待機*/
+  Utilities.sleep(3000); // 3秒待機
 
-  //ImportStatusAPIResponse(accessToken, sheetId);
+  ImportStatusAPIResponse(accessToken, sheetId);
   //Utilities.sleep(3000); // 3秒待機
 }
 
