@@ -10,8 +10,11 @@ function ConvertUnixToUTC(jsonData, keys) {
   jsonData.forEach(item => {
     keys.forEach(key => {
       if (item.hasOwnProperty(key) && item[key] !== null) {
-        let date = new Date(item[key] * 1000);
-        item[key] = date.toISOString();
+        let unixTime = Number(item[key]); // 数値に変換
+        if (!isNaN(unixTime)) {
+          let date = new Date(unixTime * 1000); // Unixタイムをミリ秒に変換
+          item[key] = date.toISOString(); // UTC形式に変換
+        }
       }
     });
   });
