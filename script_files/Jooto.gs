@@ -84,6 +84,7 @@ function SendRequest(url, method, apiKey, payload, headers) {
     options.payload = JSON.stringify(payload);
 
   const response = UrlFetchApp.fetch(url, options);
+  Utilities.sleep(1000);
   return JSON.parse(response.getContentText());
 }
 
@@ -110,7 +111,7 @@ function CreateData() {
  * @param {Object} tasksResponse - getBoardTasks関数の戻り値
  * @return {Object} - 整形されたタスクのリスト
  */
-function ExtractIdAndDescription(tasksResponse) {
+function ExtractTaskIdAndDescriptionFromBoardTasks(tasksResponse) {
   const tasks = tasksResponse.tasks || [];
   const extractedTasks = tasks.map(task => ({
     id: String(task.id),
@@ -207,31 +208,41 @@ function ProcessAndCreateTasks(apiKey, boardId, listId, emailModel, taskModel) {
   Logger.log("ProcessAndCreateTasks : " + listId);
   const models = ProcessModels(emailModel, taskModel);
 
+  const threadMap = new Map();
+
   models.forEach(obj => {
-    let taskId = obj.taskId;
-    if (!taskId) {
+    const threadId = obj.threadId;
+    if (!threadMap.has(threadId)) {
+      threadMap.set(threadId, []);
       const taskData = {
-        "name": `${obj.subject}`,
+        "name": `${obj.subject ? obj.subject : "件名なし"}`,
         "description": `${obj.threadId}`,
         "list_id": `${listId}`
       };
       Logger.log("ProcessAndCreateTasks : taskdataちゃんと入っているか確認  " + JSON.stringify(taskData));
       const taskResponse = CreateTask(apiKey, boardId, taskData);
-      taskId = taskResponse.id;
+      obj.taskId = taskResponse.id;
     }
+    threadMap.get(threadId).push(obj);
+  });
 
-    AddTaskComment(apiKey, taskId, FormatCommentContent(obj.receivedTime, obj.body, obj.subject, obj.senderName));
+  threadMap.forEach(thread => {
+    const taskId = thread[0].taskId;
+    thread.forEach(obj => {
+      AddTaskComment(apiKey, taskId, FormatCommentContent(obj.receivedTime, obj.body, obj.subject, obj.senderName));
+    });
   });
 }
 
 // テスト関数
-function TestExtractIdAndDescription() {
+function TestExtractTaskIdAndDescriptionFromBoardTasks() {
   const taskId = 26672290;
   const apiKey = "5e9a1e40b5b25e323222013c798aa080";
   const boardId = 1083747;
   const listId = 4873927;
   const tasksResponse = GetBoardTasks(apiKey, boardId);
-  const taskModel = ExtractIdAndDescription(tasksResponse);
+  console.log(tasksResponse)
+  const taskModel = ExtractTaskIdAndDescriptionFromBoardTasks(tasksResponse);
   
   const emailModel = OnButtonClick();
 
